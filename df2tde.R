@@ -14,7 +14,7 @@ for (i in 1:colnu ){
   colcl <- c(colcl, toString(class(dataf[1,i]))) # convert class of colum to string and add to vector
 }
 
-# Clean up files for previous run
+# Clean up files from previous run
 csvname <- paste0(tdename,".csv")
 if (file.exists(csvname)) file.remove(csvname)
 
