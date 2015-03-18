@@ -14,12 +14,25 @@ for (i in 1:colnu ){
   colcl <- c(colcl, toString(class(dataf[1,i]))) # convert class of colum to string and add to vector
 }
 
-# write out CSV
+# Clean up files for previous run
 csvname <- paste0(tdename,".csv")
+if (file.exists(csvname)) file.remove(csvname)
+
+pyname <- paste0(tdename,".py")
+if (file.exists(pyname)) file.remove(pyname)
+
+fn <- paste0(tdename,".tde")
+if (file.exists(fn)) file.remove(fn);
+
+if (file.exists("DataExtract.log")) file.remove("DataExtract.log");
+
+
+# write out CSV
+# csvname <- paste0(tdename,".csv")
 write.csv(dataf, file = csvname, quote=TRUE, na = "", row.names = FALSE)
 
 # Open output file and write header
-pyname <- paste0(tdename,".py")
+# pyname <- paste0(tdename,".py")
 convertpy <- file(pyname, "w")
 header <- paste0("# ",pyname,"
 import csv,os,datetime
@@ -72,7 +85,7 @@ for (i in 1:colnu ){
   )
   line <- paste0("  try:
 ",type,"\n","  except ValueError:
-	    newrow.setNull(",i-1,")\n" )
+      newrow.setNull(",i-1,")\n" )
   cat(line, file = convertpy)
 }
 
@@ -85,6 +98,6 @@ cat(code, file = convertpy)
 close(convertpy)
 # Run The Python
 cmd <- paste0("python ",pyname,"\n")
-system(cmd)
+system(cmd, wait = FALSE)
 }
 
